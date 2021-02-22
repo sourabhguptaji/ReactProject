@@ -5,7 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import {DrawerItems,DrawerActions} from 'react-navigation-drawer';
 // Import Screens
 import HomeScreen from './HomeScreen';
 import OrdersScreen from './OrdersScreen';
@@ -18,6 +18,7 @@ const Tab = createBottomTabNavigator();
 
 const homeScreenStack = ({ navigation }) => {
     return (
+        
         <Stack.Navigator
             initialRouteName="Home"
             screenOptions={{
@@ -28,7 +29,11 @@ const homeScreenStack = ({ navigation }) => {
             <Stack.Screen
                 name="Home"
                 component={HomeScreen}
-                options={{ title: 'Home Page' }} />
+                options={{ title: 'Home Page',
+                headerRight : () => (
+                    <Button title="Logout"></Button>
+                )
+                 }} />
             <Stack.Screen
                 name="Orders"
                 component={OrdersScreen}

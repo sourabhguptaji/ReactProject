@@ -3,7 +3,9 @@ import {
     Platform, StyleSheet, View, Text,
     Image, TouchableOpacity, Alert
 } from 'react-native';
-import Login from '../components/login'
+import Login from '../components/login';
+import HomeScreen from './HomeScreen';
+import firebase from 'firebase';
 
 
 export default class Splash extends Component
@@ -23,9 +25,23 @@ export default class Splash extends Component
     componentDidMount() {
         var that = this;
         setTimeout(function () {
-            that.Hide_Splash_Screen();
+           // that.Hide_Splash_Screen();
+            that.checkIfLoggedIn();
         }, 4000);
     }
+   
+    checkIfLoggedIn = () => {
+        firebase.auth().onAuthStateChanged(user => {
+            if(user){
+                console.log(user);
+                this.props.navigation.navigate("DrawerNavigatorRoutes");
+            }
+            else{
+                this.props.navigation.navigate('Auth', {screen: 'Login'});
+            }
+        });
+    }
+
 
     render() {
         let Splash_Screen = (

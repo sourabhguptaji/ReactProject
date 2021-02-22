@@ -42,8 +42,6 @@ const Auth = ({ navigations }) => {
     );
 };
 
-
-
 export default function App() {
  
     return (

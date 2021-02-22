@@ -28,6 +28,10 @@ export default function Register({  }) {
             alert('Please fill Password');
             return false;
         }
+        if(userpassword!==confirmuserpassword){
+            alert('Password and Confirm Password Not Equal');
+            return false;
+        }
         return true;
     }
 
@@ -35,15 +39,16 @@ export default function Register({  }) {
 
     const making_api_call = () => {
         if (handleSubmitPress()) {
-            alert("successfully login")
             auth.createUserWithEmailAndPassword(useremail, userpassword)
                 .then(() => {
                     var user = auth.currentUser;
                     if (user) {
+                        alert("Registered Successfully");
+                        navigation.navigate('auth',{screeen:"Login"})
                         console.log(user)
                     }
                     else {
-                        console.log('Login Failed')
+                        console.log('Registration Failed')
                     }
                 })
                 .catch((Error) => { console.log(Error) })
@@ -70,12 +75,14 @@ export default function Register({  }) {
                 />
                 <TextInput placeholder={"password"}
                     value={userpassword}
+                    secureTextEntry={true}
                     onChangeText={(text) =>
                         setUserPassword(text)
                     }                    style={{ height: 42, width: "80%", borderBottomWidth: 1, marginBottom: 30, }}
                 />
                 <TextInput placeholder={"confirm Password"}
                     value={confirmuserpassword}
+                    secureTextEntry={true}
                     onChangeText={(text) =>
                         setConfirmUserPassword(text)
                     }

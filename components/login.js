@@ -49,12 +49,12 @@ function Login({  }) {
         */
     const making_api_call = () => {
         if (handleSubmitPress()) {
-            alert("successfully login")
             auth.signInWithEmailAndPassword(useremail, userpassword)
                 .then(() => {
                     var user = auth.currentUser;
                     if (user) {
                         console.log(user)
+                        alert("successfully login");
                         navigation.navigate('DrawerNavigatorRoutes')
                     }
                     else {
@@ -84,6 +84,7 @@ function Login({  }) {
                 <TextInput placeholder={"Password"}
                     /*  onChangeText={(value) => this.setState({ password: value })}*/
                     value={userpassword}
+                    secureTextEntry={true}
                     onChangeText={(text) =>
                         setUserPassword(text)
                     }
@@ -106,7 +107,7 @@ function Login({  }) {
                     <TouchableOpacity style={{ marginTop: 20, alignItems: 'center' }}   
                     >
                         <Text style={{ color: 'green' }}
-                            onPress={() => navigation.navigate('Auth')}>
+                            onPress={() => navigation.navigate('Auth',{screen:'Register'})}>
                             don't have any account? Register
                     </Text>
                     </TouchableOpacity>
