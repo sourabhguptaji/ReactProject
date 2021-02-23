@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Register from './components/Register'
 import Login from './components/login'
 import Splash from './components/splash';
+import EditProfileScreen from './components/EditProfileScreen';
 import DrawerNavigatorRoutes from './components/DrawerNavigatorRoutes';
 
 
@@ -51,7 +52,7 @@ export default function App() {
                 <Stack.Screen
                     name="SplashScreen"
                     component={Splash}
-                    // Hiding header for Splash Screen
+                    // Hiding header for Splash Screen, Splash
                     options={{ headerShown: false }}
                 />
                 {/* Auth Navigator: Include Login and Signup */}
@@ -65,6 +66,13 @@ export default function App() {
             <Stack.Screen
                 name="DrawerNavigatorRoutes"
                 component={DrawerNavigatorRoutes}
+                // Hiding header for Navigation Drawer
+                options={{ headerShown: false }}
+            />
+           
+            <Stack.Screen
+                name="EditProfileScreen"
+                component={EditProfileScreen}
                 // Hiding header for Navigation Drawer
                 options={{ headerShown: false }}
             />

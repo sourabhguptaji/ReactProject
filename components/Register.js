@@ -44,7 +44,7 @@ export default function Register({  }) {
                     var user = auth.currentUser;
                     if (user) {
                         alert("Registered Successfully");
-                        navigation.navigate('auth',{screeen:"Login"})
+                        navigation.navigate('Auth',{screeen:"Login"})
                         console.log(user)
                     }
                     else {
