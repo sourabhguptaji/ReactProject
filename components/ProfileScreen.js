@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import { View, SafeAreaView, StyleSheet } from 'react-native';
+import { View, SafeAreaView, StyleSheet, Alert } from 'react-native';
 import {
     Avatar,
     Title,
@@ -13,10 +13,35 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
             
 import EditProfileScreen from './EditProfileScreen.js';
-
-/*import files from '../assets/filesBase64';*/
+import { auth } from './firebase/firebase';
 
 const ProfileScreen = () => {
+
+    const logout = () => {
+        Alert.alert(
+            'Logout',
+            'Are you sure? You want to logout?',
+            [
+              {
+                text: 'Cancel',
+                onPress: () => {
+                  return null;
+                },
+              },
+              {
+                text: 'Confirm',
+                onPress: () => {
+                    auth.signOut()
+                    .then(() => {
+                        console.log("Logout Successfull");
+                    })
+                    .catch((Error) => { console.log(Error) })
+                },
+              },
+            ],
+            {cancelable: false},
+          );
+    }
 
     const navigation = useNavigation(); 
 
@@ -95,6 +120,12 @@ const ProfileScreen = () => {
                     <View style={styles.menuItem}>
                         <Icon name="settings-outline" color="#FF6347" size={25} />
                         <Text style={styles.menuItemText}>Settings</Text>
+                    </View>
+                </TouchableRipple>
+                <TouchableRipple onPress={() => {logout()}}>
+                    <View style={styles.menuItem}>
+                        <Icon name="logout" color="#FF6347" size={25} />
+                        <Text style={styles.menuItemText}>Logout</Text>
                     </View>
                 </TouchableRipple>
             </View>
