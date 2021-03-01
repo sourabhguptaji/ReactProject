@@ -7,6 +7,8 @@ import {
     TextInput,
     StyleSheet,
 } from 'react-native';
+import { auth } from './firebase/firebase';
+import firebase from 'firebase';
 
 import { useTheme } from 'react-native-paper';
 
@@ -23,7 +25,14 @@ const EditProfileScreen = () => {
 
     const [image, setImage] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8Iiw4ti3IVeFYQLEhe1iB2V-_jGjGhSlGAA&usqp=CAU');
     const { colors } = useTheme();
+    const [firstname, setFirstName] = useState()
+    const [lastname, setLastName] = useState()
+    const [phone, setPhone] = useState()
+    const [email, setEmail] = useState()
 
+    const [address, setAddress] = useState()
+
+    
     const takePhotoFromCamera = () => {
         ImagePicker.openCamera({
             compressImageMaxWidth: 300,
@@ -77,6 +86,25 @@ const EditProfileScreen = () => {
             </View>
         </View>
     );
+    const userid = auth.currentUser;
+    function writeUserData(name,lastname,phone,email,address) {
+        console.log(firebase) 
+        firebase.database().ref('/User/').set({
+            name: name,
+            lastname: lastname,
+            phone: phone,
+            email: email,
+            address:address
+        }, (error) => {
+            if (error) {
+                console.log(error)
+            }
+            else {
+                console.log(name)
+                console.log("inserted")
+            }
+        });
+    }
 
     var bs = React.createRef();
     var  fall = new Animated.Value(1);
@@ -145,7 +173,11 @@ const EditProfileScreen = () => {
                     <TextInput
                         placeholder="First Name"
                         placeholderTextColor="#666666"
+                        id= "uname"
                         autoCorrect={false}
+                        onChangeText={(text) => {
+                            setFirstName(text)
+                        }}
                         style={[
                             styles.textInput,
                             {
@@ -160,6 +192,9 @@ const EditProfileScreen = () => {
                         placeholder="Last Name"
                         placeholderTextColor="#666666"
                         autoCorrect={false}
+                        onChangeText={(text) => {
+                            setLastName(text)
+                        }}
                         style={[
                             styles.textInput,
                             {
@@ -175,6 +210,9 @@ const EditProfileScreen = () => {
                         placeholderTextColor="#666666"
                         keyboardType="number-pad"
                         autoCorrect={false}
+                        onChangeText={(text) => {
+                            setPhone(text)
+                        }}
                         style={[
                             styles.textInput,
                             {
@@ -189,6 +227,9 @@ const EditProfileScreen = () => {
                         placeholder="Email"
                         placeholderTextColor="#666666"
                         keyboardType="email-address"
+                        onChangeText={(text) => {
+                            setEmail(text)
+                        }}
                         autoCorrect={false}
                         style={[
                             styles.textInput,
@@ -198,26 +239,16 @@ const EditProfileScreen = () => {
                         ]}
                     />
                 </View>
-                <View style={styles.action}>
-                    <FontAwesome name="globe" color={colors.text} size={20} />
-                    <TextInput
-                        placeholder="Country"
-                        placeholderTextColor="#666666"
-                        autoCorrect={false}
-                        style={[
-                            styles.textInput,
-                            {
-                                color: colors.text,
-                            },
-                        ]}
-                    />
-                </View>
+               
                 <View style={styles.action}>
                     <Icon name="map-marker-outline" color={colors.text} size={20} />
                     <TextInput
-                        placeholder="City"
+                        placeholder="Address"
                         placeholderTextColor="#666666"
                         autoCorrect={false}
+                        onChangeText={(text) => {
+                            setAddress(text)
+                        }}
                         style={[
                             styles.textInput,
                             {
@@ -226,7 +257,7 @@ const EditProfileScreen = () => {
                         ]}
                     />
                 </View>
-                <TouchableOpacity style={styles.commandButton} onPress={() => { }}>
+                <TouchableOpacity style={styles.commandButton} onPress={() => { writeUserData(firstname,lastname,phone,email,address) }}>
                     <Text style={styles.panelButtonTitle}>Submit</Text>
                 </TouchableOpacity>
             </Animated.View>
