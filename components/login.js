@@ -7,6 +7,9 @@ import { color } from 'react-native-reanimated';
 import Register from '../components/Register'
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import * as yup from 'yup';
+import { Formik } from 'formik'
+import {db} from './firebase/firebase';
 
 import { auth } from './firebase/firebase';
 function Login({  }) {
@@ -16,53 +19,44 @@ function Login({  }) {
     const [userpassword, setUserPassword] = useState('');
     const [errortext, setErrortext] = useState('');
  
-    /* state = {
-         username: "",
-         password: ""
-     }*/
-    const handleSubmitPress = () => {
-        
-        if (!useremail) {
-            alert('Please fill username');
-            return false;
-        }
-        if (!userpassword) {
-            alert('Please fill Password');
-            return false;
-        }
-         return true;
-    }
-    
-    
-         /* validate_field = () => {
-             const  { username, password } = this.state
-             if (username == "") {
-                 alert("Username must not be empty")
-                 return false
-             }
-             else if (password == "") {
-                 alert("Password must not be empty")
-                 return false
-             }
-             return true
-         }
-        */
-    const making_api_call = () => {
-        if (handleSubmitPress()) {
-            auth.signInWithEmailAndPassword(useremail, userpassword)
-                .then(() => {
-                    var user = auth.currentUser;
-                    if (user) {
-                        console.log(user)
+    const loginValidationSchema = yup.object().shape({
+        email: yup
+          .string()
+          .email("Please enter valid email")
+          .required('Email Address is Required'),
+        password: yup
+          .string()
+          .min(6, ({ min }) => `Password must be at least ${min} characters`)
+          .required('Password is required'),
+      })
+
+    const making_api_call = (values) => {
+     /*   db
+    .ref('/User')
+    .on('value', snapshot => {
+        console.log('User Data:',snapshot.val());
+    });*/
+            auth.signInWithEmailAndPassword(values.email, values.password)
+            .then((user) => {
+                console.log(user);
+                if (user) {
+                        console.log(user);
                         alert("successfully login");
                         navigation.navigate('DrawerNavigatorRoutes')
                     }
-                    else {
-                        console.log('Login Failed')
-                    }
                 })
-                .catch((Error) => { console.log(Error) })
-        }
+                .catch((error) => {
+                    console.log(error);
+                    if (error.code === "auth/invalid-email")
+                      setErrortext(error.message);
+                    else if (error.code === "auth/user-not-found")
+                      setErrortext("No User Found");
+                    else {
+                      setErrortext(
+                        "Please check your email id or password"
+                      );
+                    }
+                  });
     }
         
         return (
@@ -72,36 +66,60 @@ function Login({  }) {
             }}>
                 <Image source={require('../assets/Logo.jpeg')}
                     style={{ width: '30%', height: '30%', resizeMode: 'contain', marginTop: '5%' }} />
-
-                <TextInput placeholder={"username"}
-                    value={useremail}
-                    /* onChangeText={(value) => this.setState({ username: value })}*/
-                    onChangeText={(text) =>
-                        setUserEmail(text)
-                    }
+                {errortext != '' ? (
+              <Text style={{ fontSize: 12, color: 'red' }}>
+                {errortext}
+              </Text>
+            ) : null}
+                <Formik
+                   validationSchema={loginValidationSchema}
+                   initialValues={{ email: '', password: '' }}
+                   onSubmit={values => making_api_call(values)}
+                >
+                {({
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  values,
+                  errors,
+                  touched,
+                  isValid,
+                }) => (
+                <>
+                <TextInput name="email"
+                    placeholder="Email"
+                    onChangeText={handleChange('email')}
+                    onBlur={handleBlur('email')}
+                    value={values.email}
+                    keyboardType="email-address"
                     style={{ height: 42, width: "80%", borderBottomWidth: 1 }}
                 />
-                <TextInput placeholder={"Password"}
-                    /*  onChangeText={(value) => this.setState({ password: value })}*/
-                    value={userpassword}
-                    secureTextEntry={true}
-                    onChangeText={(text) =>
-                        setUserPassword(text)
-                    }
+                {(errors.email && touched.email) &&
+                    <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
+                }
+                <TextInput name="password"
+                        placeholder="Password"
+                        onChangeText={handleChange('password')}
+                        onBlur={handleBlur('password')}
+                        value={values.password}
+                        secureTextEntry
                     style={{ height: 42, width: "80%", borderBottomWidth: 1, marginTop: "10%" }}
                 />
+                {(errors.password && touched.password) &&
+                    <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
+                }
                 <View style={{ marginTop: "10%", width: "80%" }}>
                     <TouchableOpacity style={{
                         borderWidth: 1, height: 42, width: "80%",
                         justifyContent: "center", alignItems: "center", borderRadius: 40,
                         backgroundColor: "red", alignSelf: "center"
                     }}
-                        onPress={making_api_call}
-
+                    onPress={handleSubmit}
+                    disabled={!isValid}
 
                     >
                         <Text style={{ color: "white" }}>
-                            Log in
+                            Login
                     </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{ marginTop: 20, alignItems: 'center' }}   
@@ -112,7 +130,9 @@ function Login({  }) {
                     </Text>
                     </TouchableOpacity>
                 </View>
-
+                </>
+                )}
+              </Formik>
             </View>
         );
 
@@ -120,3 +140,10 @@ function Login({  }) {
     
 }
 export default Login;
+
+const styles = StyleSheet.create({
+    errorText: {
+        fontSize: 10,
+        color: 'red',
+      },
+})

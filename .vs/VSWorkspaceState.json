@@ -1,9 +1,11 @@
 {
   "ExpandedNodes": [
     "",
+    "\\assets",
     "\\components",
-    "\\components\\firebase"
+    "\\components\\firebase",
+    "\\components\\HomeComponents"
   ],
-  "SelectedNode": "\\components\\firebase\\config.js",
+  "SelectedNode": "\\components\\HomeComponents\\CardList.js",
   "PreviewInSolutionExplorer": false
 }

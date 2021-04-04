@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+ import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -10,6 +10,7 @@ import {
 import { auth } from './firebase/firebase';
 import firebase from 'firebase';
 
+
 import { useTheme } from 'react-native-paper';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -20,6 +21,7 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 
 import ImagePicker from 'react-native-image-crop-picker';
+
 
 const EditProfileScreen = () => {
 
@@ -86,10 +88,10 @@ const EditProfileScreen = () => {
             </View>
         </View>
     );
-    const userid = auth.currentUser;
+    const userid = auth.currentUser.uid;
     function writeUserData(name,lastname,phone,email,address) {
-        console.log(firebase) 
-        firebase.database().ref('/User/').set({
+        console.log(userid)
+        firebase.database().ref('/User/' + userid).set({
             name: name,
             lastname: lastname,
             phone: phone,
@@ -104,6 +106,16 @@ const EditProfileScreen = () => {
                 console.log("inserted")
             }
         });
+    }
+     const [name, onChangeText] = useState();
+    function Fetch() {
+        firebase.database()
+            .ref('/User/' + userid+ '/name/')
+            .once('value')
+        
+            .then(snapshot => {
+                console.log('User data: ', snapshot.val());
+            });
     }
 
     var bs = React.createRef();
@@ -173,11 +185,13 @@ const EditProfileScreen = () => {
                     <TextInput
                         placeholder="First Name"
                         placeholderTextColor="#666666"
+                        
                         id= "uname"
                         autoCorrect={false}
                         onChangeText={(text) => {
                             setFirstName(text)
                         }}
+                        value='name'
                         style={[
                             styles.textInput,
                             {
@@ -260,6 +274,10 @@ const EditProfileScreen = () => {
                 <TouchableOpacity style={styles.commandButton} onPress={() => { writeUserData(firstname,lastname,phone,email,address) }}>
                     <Text style={styles.panelButtonTitle}>Submit</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.commandButton} onPress={() => { Fetch() }}>
+                    <Text style={styles.panelButtonTitle}>fetch</Text>
+                </TouchableOpacity>
+              
             </Animated.View>
         </View>
     );

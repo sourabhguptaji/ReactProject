@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import { View, SafeAreaView, StyleSheet } from 'react-native';
+import { View, SafeAreaView, StyleSheet, Alert, ScrollView } from 'react-native';
 import {
     Avatar,
     Title,
@@ -11,12 +11,36 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
-            
 import EditProfileScreen from './EditProfileScreen.js';
-
-/*import files from '../assets/filesBase64';*/
+import { auth } from './firebase/firebase';
 
 const ProfileScreen = () => {
+
+    const logout = () => {
+        Alert.alert(
+            'Logout',
+            'Are you sure? You want to logout?',
+            [
+              {
+                text: 'Cancel',
+                onPress: () => {
+                  return null;
+                },
+              },
+              {
+                text: 'Confirm',
+                onPress: () => {
+                    auth.signOut()
+                    .then(() => {
+                        console.log("Logout Successfull");
+                    })
+                    .catch((Error) => { console.log(Error) })
+                },
+              },
+            ],
+            {cancelable: false},
+          );
+    }
 
     const navigation = useNavigation(); 
 
@@ -45,7 +69,7 @@ const ProfileScreen = () => {
                             size={25}
                             backgroundColor='black'
                             color='white'
-                            onPress={() => navigation.navigate('EditProfileScreen')}
+                            onPress={() => navigation.navigate(EditProfileScreen)}
                         />
                     </View>
                    
@@ -69,7 +93,7 @@ const ProfileScreen = () => {
             <View style={{ borderWidth: 1, borderColor:'#D3D3D3' }}>
 
             </View>
-           
+            <ScrollView>
             <View style={styles.menuWrapper}>
                 <TouchableRipple onPress={() => { }}>
                     <View style={styles.menuItem}>
@@ -97,7 +121,14 @@ const ProfileScreen = () => {
                         <Text style={styles.menuItemText}>Settings</Text>
                     </View>
                 </TouchableRipple>
-            </View>
+                <TouchableRipple onPress={() => {logout()}}>
+                    <View style={styles.menuItem}>
+                        <Icon name="logout" color="#FF6347" size={25} />
+                        <Text style={styles.menuItemText}>Logout</Text>
+                    </View>
+                </TouchableRipple>
+                </View>
+            </ScrollView>
         </SafeAreaView>
     );
 };
