@@ -7,7 +7,9 @@ import Register from './components/Register'
 import Login from './components/login'
 import Splash from './components/splash';
 import EditProfileScreen from './components/EditProfileScreen';
+import AadharScreen from './components/AadharScreen';
 import DrawerNavigatorRoutes from './components/DrawerNavigatorRoutes';
+import MaterialCards from './components/HomeComponents/materialCardElectrician';
 
 
 
@@ -73,6 +75,20 @@ export default function App() {
             <Stack.Screen
                 name="EditProfileScreen"
                 component={EditProfileScreen}
+                // Hiding header for Navigation Drawer
+                options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+                name="AadharScreen"
+                component={AadharScreen}
+                // Hiding header for Navigation Drawer
+                options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+                name="MaterialCards"
+                component={MaterialCards}
                 // Hiding header for Navigation Drawer
                 options={{ headerShown: false }}
             />

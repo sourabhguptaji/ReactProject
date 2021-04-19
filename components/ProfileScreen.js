@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import EditProfileScreen from './EditProfileScreen.js';
+import AadharScreen from './AadharScreen.js';
 import { auth } from './firebase/firebase';
 
 const ProfileScreen = () => {
@@ -95,10 +96,10 @@ const ProfileScreen = () => {
             </View>
             <ScrollView>
             <View style={styles.menuWrapper}>
-                <TouchableRipple onPress={() => { }}>
+                <TouchableRipple onPress={() => navigation.navigate(AadharScreen)}>
                     <View style={styles.menuItem}>
                         <Icon name="heart-outline" color="#FF6347" size={25} />
-                        <Text style={styles.menuItemText}>Your Favorites</Text>
+                        <Text style={styles.menuItemText}>Work With US</Text>
                     </View>
                 </TouchableRipple>
                 <TouchableRipple onPress={() => { }}>

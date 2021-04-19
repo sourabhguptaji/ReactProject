@@ -44,17 +44,21 @@ const HomeScreen = ({ navigation }) => {
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
                         >
-                            <TouchableOpacity >
+                            <TouchableOpacity onPress={() => navigation.navigate(MaterialCards)}>
                         <Category imageUri={{ uri: 'https://2.bp.blogspot.com/-exra_dus6mo/W_JlJF4DSkI/AAAAAAAAAS4/V_31mGftyPYdHfGZhMSK8lWHWplzkJMFQCLcBGAs/s320/Electrician%2BAdelaide%2BHills.jpg'}}
                             name="Electrician"
                                 />
                             </TouchableOpacity>
+                            <TouchableOpacity onPress={() => navigation.navigate(MaterialCards)}>
                         <Category imageUri={{ uri: 'https://content3.jdmagicbox.com/def_content/plumbers/default-plumbers-6.jpg' }}
                             name="Plumber"
                         />
+                           </TouchableOpacity>
+                           <TouchableOpacity onPress={() => navigation.navigate(MaterialCards)}>
                         <Category imageUri={{ uri: 'https://5.imimg.com/data5/CM/TH/ZF/SELLER-12842665/carpenter-500x500.jpg' }}
                             name="Carpenter"
                         />
+                        </TouchableOpacity>
                     </ScrollView>
                 </View>
             </View>
